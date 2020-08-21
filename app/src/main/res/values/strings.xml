@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Revolut Test</string>
+    <string name="connection_error">Network error.\nPlease check your internet connection.</string>
+</resources>
