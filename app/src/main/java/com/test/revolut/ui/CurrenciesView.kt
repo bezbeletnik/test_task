@@ -1,15 +1,15 @@
 package com.test.revolut.ui
 
+import com.test.revolut.ui.vo.CurrencyRateVo
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleTagStrategy
 import moxy.viewstate.strategy.StateStrategyType
-import moxy.viewstate.strategy.alias.AddToEndSingle
 
 
 interface CurrenciesView : MvpView {
 
     @StateStrategyType(AddToEndSingleTagStrategy::class, tag = TAG)
-    fun display(text: String)
+    fun showResult(text: List<CurrencyRateVo>)
 
     @StateStrategyType(AddToEndSingleTagStrategy::class, tag = TAG)
     fun showError(message: String)

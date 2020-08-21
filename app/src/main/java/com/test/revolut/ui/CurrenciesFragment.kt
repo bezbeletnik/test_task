@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.test.revolut.R
+import com.test.revolut.ui.vo.CurrencyRateVo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.currencies_fragment.*
 import moxy.MvpAppCompatFragment
@@ -29,8 +30,12 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
         return inflater.inflate(R.layout.currencies_fragment, container, false)
     }
 
-    override fun display(text : String) {
-        textView.text = text
+    override fun showResult(vos: List<CurrencyRateVo>) {
+        if (vos.isEmpty()) {
+
+        } else {
+
+        }
     }
 
     override fun showError(message: String) {

@@ -1,7 +1,9 @@
 package com.test.revolut.ui
 
-import com.test.revolut.data.CurrenciesRepository
+import com.test.revolut.data.mapper.CurrencyCode
 import com.test.revolut.domain.model.CurrencyRate
+import com.test.revolut.domain.usecase.GetCurrenciesUseCase
+import com.test.revolut.ui.formatter.CurrencyRateFormatter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observer
@@ -14,54 +16,56 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CurrenciesPresenter @Inject constructor(
-    private val currenciesRepository: CurrenciesRepository
+    private val getCurrenciesUseCase: GetCurrenciesUseCase,
+    private val formatter: CurrencyRateFormatter
 ) : MvpPresenter<CurrenciesView>() {
 
     private val disposableContainer = CompositeDisposable()
 
     private val mainCurrencyChangedSubject = PublishSubject.create<Any>().toSerialized()
 
-    private var mainCurrencyCode = "EUR" //todo save in pref
+    private var mainCurrencyCode = CurrencyCode.EUR //todo: EUR by default, otherwise from pref
 
     override fun onFirstViewAttach() {
         Observable.merge(
-            Observable.interval(REFRESH_INTERVAL_SEC, TimeUnit.SECONDS),
+            Observable.interval(REFRESH_INTERVAL_SEC, TimeUnit.SECONDS).startWithItem(0),
             mainCurrencyChangedSubject.hide()
         )
-            .flatMapSingle { currenciesRepository.getCurrencies(mainCurrencyCode) }
+            .flatMapSingle { getCurrenciesUseCase.execute(mainCurrencyCode) }
             .retry(1) //todo
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                object : Observer<List<CurrencyRate>> {
-                    override fun onNext(t: List<CurrencyRate>) {
-                        viewState.display(t.toString())
-                    }
-
-                    override fun onError(e: Throwable) {
-                        if (e is ConnectException) {
-                            viewState.showConnectionError()
-                        } else {
-                            viewState.showError(e.message.toString())
-                        }
-                    }
-
-                    override fun onComplete() {
-                        //no-op
-                    }
-
-                    override fun onSubscribe(d: Disposable) {
-                        disposableContainer.add(d)
-                    }
-                }
-            )
+            .subscribe(CurrenciesObserver())
     }
 
-    fun onChangeMainCurrency(currencyCode: String) {
+    fun onChangeMainCurrency(currencyCode: CurrencyCode) {
+        //todo save in pref
         mainCurrencyCode = currencyCode
     }
 
     override fun onDestroy() {
         disposableContainer.clear()
+    }
+
+    private inner class CurrenciesObserver : Observer<List<CurrencyRate>> {
+        override fun onNext(rates: List<CurrencyRate>) {
+            viewState.showResult(formatter.format(rates))
+        }
+
+        override fun onError(e: Throwable) {
+            if (e is ConnectException) {
+                viewState.showConnectionError()
+            } else {
+                viewState.showError(e.message.toString())
+            }
+        }
+
+        override fun onComplete() {
+            //no-op
+        }
+
+        override fun onSubscribe(d: Disposable) {
+            disposableContainer.add(d)
+        }
     }
 
     companion object {
