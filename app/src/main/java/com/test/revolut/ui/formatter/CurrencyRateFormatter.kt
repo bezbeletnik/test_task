@@ -11,11 +11,21 @@ class CurrencyRateFormatter @Inject constructor(
 
     fun format(currencyRates: List<CurrencyRate>): List<CurrencyRateVo> {
         return currencyRates.map {
+            val code = codeMapper.mapToString(it.currency)
             CurrencyRateVo(
-                currencyCode = codeMapper.mapToString(it.currency),
-                currencyFullName = codeMapper.mapToString(it.currency),
+                imageUrl = formatImageUrl(code),
+                currencyShortName = code,
+                currencyFullName = code,
                 rate = it.rate.toString()
             )
         }
+    }
+
+    private fun formatImageUrl(code: String): String {
+        return "$CURRENCY_IMG_URL$code"
+    }
+
+    companion object {
+        private const val CURRENCY_IMG_URL = ""
     }
 }

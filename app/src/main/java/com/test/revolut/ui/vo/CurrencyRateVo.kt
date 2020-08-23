@@ -2,7 +2,8 @@ package com.test.revolut.ui.vo
 
 
 data class CurrencyRateVo(
-    val currencyCode: String,
-    val rate: String,
-    val currencyFullName: String
+    val imageUrl: String,
+    val currencyShortName: String,
+    val currencyFullName: String,
+    val rate: String
 )

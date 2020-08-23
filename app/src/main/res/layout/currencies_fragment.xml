@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <TextView
@@ -13,7 +14,7 @@
         android:id="@+id/emptyResultTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/connection_error"/>
+        android:text="@string/empty_result"/>
 
     <Button
         android:id="@+id/reloadButton"
@@ -31,6 +32,8 @@
         android:id="@+id/currenciesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        tools:itemCount="5"
+        tools:listitem="@layout/currency_rate_item"/>
 
 </LinearLayout>

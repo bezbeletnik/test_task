@@ -5,6 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.test.revolut.R
 import com.test.revolut.ui.vo.CurrencyRateVo
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +25,10 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
 
     private val presenter by moxyPresenter { presenterProvider.get() }
 
+    private val itemAdapter = ItemAdapter<CurrencyRateItem>()
+
+    private val fastAdapter = FastAdapter.with(itemAdapter)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,11 +37,20 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
         return inflater.inflate(R.layout.currencies_fragment, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        currenciesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        currenciesRecyclerView.adapter = fastAdapter
+    }
+
     override fun showResult(vos: List<CurrencyRateVo>) {
         if (vos.isEmpty()) {
-
+            emptyResultTextView.visibility = View.VISIBLE
+            itemAdapter.clear()
         } else {
-
+            emptyResultTextView.visibility = View.GONE
+            val items = vos.map { CurrencyRateItem(it) }
+            itemAdapter.setNewList(items)
         }
     }
 

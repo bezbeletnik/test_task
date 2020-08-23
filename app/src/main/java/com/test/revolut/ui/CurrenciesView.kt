@@ -9,7 +9,7 @@ import moxy.viewstate.strategy.StateStrategyType
 interface CurrenciesView : MvpView {
 
     @StateStrategyType(AddToEndSingleTagStrategy::class, tag = TAG)
-    fun showResult(text: List<CurrencyRateVo>)
+    fun showResult(vos: List<CurrencyRateVo>)
 
     @StateStrategyType(AddToEndSingleTagStrategy::class, tag = TAG)
     fun showError(message: String)

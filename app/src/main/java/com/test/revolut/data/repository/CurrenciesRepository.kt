@@ -1,6 +1,7 @@
-package com.test.revolut.data
+package com.test.revolut.data.repository
 
 import androidx.annotation.CheckResult
+import com.test.revolut.data.store.CurrenciesApiService
 import com.test.revolut.data.mapper.CurrencyCode
 import com.test.revolut.data.mapper.CurrencyCodeMapper
 import com.test.revolut.data.mapper.CurrencyMapper

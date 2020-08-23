@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Revolut Test</string>
     <string name="connection_error">Network error.\nPlease check your internet connection.</string>
-    <string name="empty_result">No data. Please try to update app or try again</string>
+    <string name="empty_result">No data. Please, try again</string>
     <string name="try_again">Refresh</string>
+    <string name="currency_img">Currency image</string>
 </resources>
