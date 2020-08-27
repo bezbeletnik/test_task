@@ -5,7 +5,6 @@ import javax.inject.Inject
 
 class CurrencyCodeMapper @Inject constructor() {
 
-    //todo недостаток: при добавлении новой валюты на сервере нужно обновление приложения
     private val currencies = lazy {
         mapOf(
             "EUR" to CurrencyCode.EUR,

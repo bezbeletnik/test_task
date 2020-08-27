@@ -22,7 +22,7 @@ class CurrencyRateItem(
 
     override var identifier: Long = vo.hashCode().toLong()
 
-    class ViewHolder(view: View) : FastAdapter.ViewHolder<CurrencyRateItem>(view) {
+    class ViewHolder(val view: View) : FastAdapter.ViewHolder<CurrencyRateItem>(view) {
 
         private val currencyImageView: ImageView = view.findViewById(R.id.currencyImageView)
         private val currencyShortName: TextView = view.findViewById(R.id.currencyShortName)
@@ -31,7 +31,7 @@ class CurrencyRateItem(
 
         override fun bindView(item: CurrencyRateItem, payloads: List<Any>) {
             Glide.with(currencyImageView)
-                .load("https://restcountries.eu/data/usa.svg")
+                .load(item.vo.imageUrl)
                 .circleCrop()
                 .into(currencyImageView)
 
