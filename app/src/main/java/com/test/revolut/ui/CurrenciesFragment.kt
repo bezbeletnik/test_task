@@ -10,6 +10,7 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.test.revolut.R
 import com.test.revolut.ui.vo.CurrencyRateVo
+import com.test.revolut.ui.vo.MainCurrencyVo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.currencies_fragment.*
 import moxy.MvpAppCompatFragment
@@ -43,13 +44,14 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
         currenciesRecyclerView.adapter = fastAdapter
     }
 
-    override fun showResult(vos: List<CurrencyRateVo>) {
-        if (vos.isEmpty()) {
+    override fun showResult(mainCurrencyVo: MainCurrencyVo, rateVos: List<CurrencyRateVo>) {
+//        mainCurrencyVo
+        if (rateVos.isEmpty()) {
             emptyResultTextView.visibility = View.VISIBLE
             itemAdapter.clear()
         } else {
             emptyResultTextView.visibility = View.GONE
-            val items = vos.map { CurrencyRateItem(it) }
+            val items = rateVos.map { CurrencyRateItem(it) }
             itemAdapter.setNewList(items)
         }
     }

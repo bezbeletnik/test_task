@@ -46,7 +46,7 @@ class CurrencyCodeMapper @Inject constructor() {
         return currencies.value[code.toUpperCase(Locale.ENGLISH)]
     }
 
-    fun mapToString(code: CurrencyCode): String {
+    fun mapToIsoCode(code: CurrencyCode): String {
         return currencies.value.entries.first { it.value == code }.key
     }
 }

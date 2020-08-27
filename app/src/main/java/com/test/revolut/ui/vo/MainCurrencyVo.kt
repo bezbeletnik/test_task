@@ -4,10 +4,10 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.RawRes
 
 
-data class CurrencyRateVo(
+data class MainCurrencyVo(
     @DrawableRes
     val image: Int,
     val currencyShortName: String,
     val currencyFullName: String,
-    val rate: String
+    val amount: String
 )
