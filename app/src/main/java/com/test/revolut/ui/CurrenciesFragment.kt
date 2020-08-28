@@ -8,10 +8,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter.items.AbstractItem
 import com.test.revolut.R
 import com.test.revolut.ui.item.CurrencyRateItem
 import com.test.revolut.ui.item.MainCurrencyItem
@@ -19,12 +16,11 @@ import com.test.revolut.ui.vo.CurrencyRateVo
 import com.test.revolut.ui.vo.MainCurrencyVo
 import com.test.revolut.utils.downcast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.currencies_fragment.currenciesRecyclerView
-import kotlinx.android.synthetic.main.currencies_fragment.emptyResultTextView
+import kotlinx.android.synthetic.main.currencies_fragment.*
 import moxy.MvpAppCompatFragment
+import moxy.ktx.moxyPresenter
 import javax.inject.Inject
 import javax.inject.Provider
-import moxy.ktx.moxyPresenter
 
 @AndroidEntryPoint
 class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {

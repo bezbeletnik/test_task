@@ -8,7 +8,6 @@ import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.test.revolut.R
-import com.test.revolut.ui.vo.CurrencyRateVo
 import com.test.revolut.ui.vo.MainCurrencyVo
 
 class MainCurrencyItem(
