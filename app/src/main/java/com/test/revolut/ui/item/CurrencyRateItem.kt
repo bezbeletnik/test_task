@@ -1,4 +1,4 @@
-package com.test.revolut.ui
+package com.test.revolut.ui.item
 
 import android.view.View
 import android.widget.EditText
@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.test.revolut.R
 import com.test.revolut.ui.vo.CurrencyRateVo
@@ -18,7 +19,8 @@ class CurrencyRateItem(
 
     override val layoutRes = R.layout.currency_rate_item
 
-    override fun getViewHolder(v: View) = ViewHolder(v)
+    override fun getViewHolder(v: View) =
+        ViewHolder(v)
 
     override var identifier: Long = vo.hashCode().toLong()
 

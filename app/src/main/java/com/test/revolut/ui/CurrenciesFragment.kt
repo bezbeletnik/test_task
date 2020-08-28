@@ -7,12 +7,20 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
+import com.mikepenz.fastadapter.IAdapter
+import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.items.AbstractItem
 import com.test.revolut.R
+import com.test.revolut.ui.item.CurrencyRateItem
+import com.test.revolut.ui.item.MainCurrencyItem
 import com.test.revolut.ui.vo.CurrencyRateVo
 import com.test.revolut.ui.vo.MainCurrencyVo
+import com.test.revolut.utils.downcast
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.currencies_fragment.*
+import kotlinx.android.synthetic.main.currencies_fragment.currenciesRecyclerView
+import kotlinx.android.synthetic.main.currencies_fragment.emptyResultTextView
 import moxy.MvpAppCompatFragment
 import javax.inject.Inject
 import javax.inject.Provider
@@ -26,9 +34,14 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
 
     private val presenter by moxyPresenter { presenterProvider.get() }
 
-    private val itemAdapter = ItemAdapter<CurrencyRateItem>()
+    private val ratesAdapter = ItemAdapter<CurrencyRateItem>()
+    private val mainItemAdapter = ItemAdapter<MainCurrencyItem>()
 
-    private val fastAdapter = FastAdapter.with(itemAdapter)
+    private val fastAdapter = FastAdapter<GenericItem>()
+
+    init {
+        fastAdapter.addAdapters(listOf(mainItemAdapter.downcast(), ratesAdapter.downcast()))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,15 +58,19 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
     }
 
     override fun showResult(mainCurrencyVo: MainCurrencyVo, rateVos: List<CurrencyRateVo>) {
-//        mainCurrencyVo
         if (rateVos.isEmpty()) {
             emptyResultTextView.visibility = View.VISIBLE
-            itemAdapter.clear()
+            ratesAdapter.clear()
         } else {
             emptyResultTextView.visibility = View.GONE
-            val items = rateVos.map { CurrencyRateItem(it) }
-            itemAdapter.setNewList(items)
+            val items = rateVos.map {
+                CurrencyRateItem(
+                    it
+                )
+            }
+            ratesAdapter.set(items)
         }
+        mainItemAdapter.set(listOf(MainCurrencyItem(mainCurrencyVo)))
     }
 
     override fun showError(message: String) {
