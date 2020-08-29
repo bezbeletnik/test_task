@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
@@ -56,17 +56,22 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
 
         fastAdapter.onClickListener = { _, _, item, _ ->
             if (item is CurrencyRateItem) {
-                presenter.onMainCurrencyChanged(item.vo.currencyCode)
+                presenter.onMainCurrencyChanged(item.vo.currencyCode, item.vo.rate)
             }
             true
         }
+        reloadButton.setOnClickListener {
+            presenter.onReloadClicked()
+        }
+
+        showState(State.LOADING)
     }
 
     override fun showResult(mainCurrencyVo: MainCurrencyVo, rateVos: List<CurrencyRateVo>) {
         if (rateVos.isEmpty()) {
-            emptyResultTextView.visibility = View.VISIBLE
-            ratesAdapter.clear()
+            showState(State.EMPTY_RESULT)
         } else {
+            showState(State.CONTENT_SHOWN)
             emptyResultTextView.visibility = View.GONE
             val items = rateVos.map {
                 CurrencyRateItem(
@@ -74,17 +79,34 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
                 )
             }
             FastAdapterDiffUtil.set(ratesAdapter, items)
+
+            val mainCurrencyItem = MainCurrencyItem(mainCurrencyVo) {
+                presenter.onAmountChanged(it)
+            }
+            FastAdapterDiffUtil.set(mainItemAdapter, listOf(mainCurrencyItem))
         }
-        val mainCurrencyItem = MainCurrencyItem(mainCurrencyVo) { presenter.onAmountChanged(it) }
-        FastAdapterDiffUtil.set(mainItemAdapter, listOf(mainCurrencyItem))
+    }
+
+    private fun showState(state: State, errorText: String? = null) {
+        progressBarView.isVisible = state == State.LOADING
+
+        emptyResultTextView.isVisible = state == State.EMPTY_RESULT || state == State.ERROR
+        reloadButton.isVisible = state == State.EMPTY_RESULT || state == State.ERROR
+        emptyResultTextView.text = errorText
+
+        currenciesRecyclerView.isVisible = state == State.CONTENT_SHOWN
+    }
+
+    private enum class State {
+        CONTENT_SHOWN, LOADING, EMPTY_RESULT, ERROR
     }
 
     override fun showError(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        showState(State.ERROR, message)
     }
 
     override fun showConnectionError() {
-        Toast.makeText(requireContext(), R.string.connection_error, Toast.LENGTH_LONG).show()
+        showState(State.ERROR, getString(R.string.connection_error))
     }
 
     companion object {

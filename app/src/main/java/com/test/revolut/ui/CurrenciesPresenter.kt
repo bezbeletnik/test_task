@@ -27,29 +27,24 @@ class CurrenciesPresenter @Inject constructor(
 
     private val mainCurrencyChangedSubject = PublishSubject.create<Any>().toSerialized()
     private var mainCurrencyCode = CurrencyCode.EUR
-    private var mainCurrencyAmount = 10.0
+    private var mainCurrencyAmount = 100.0
     private val revision = AtomicInteger()
 
     private var lastRates: List<CurrencyRate> = emptyList()
 
     override fun onFirstViewAttach() {
-        Observable.merge(
-            Observable.interval(REFRESH_INTERVAL_SEC, TimeUnit.SECONDS).startWithItem(0),
-            mainCurrencyChangedSubject.hide()
-        )
-            .switchMapSingle {
-                val requestedRevision = revision.get()
-                getCurrenciesUseCase.execute(mainCurrencyCode)
-                    .map { requestedRevision to it }
-            }
-            .retry(1) //todo or move to repo
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(CurrenciesObserver())
+        subscribeForCurrencyRateUpdate()
     }
 
-    fun onMainCurrencyChanged(currencyCode: CurrencyCode) {
+    fun onReloadClicked() {
+        disposableContainer.clear()
+        subscribeForCurrencyRateUpdate()
+    }
+
+    fun onMainCurrencyChanged(currencyCode: CurrencyCode, rate: String) {
         revision.incrementAndGet()
         mainCurrencyCode = currencyCode
+        mainCurrencyAmount = rate.toDoubleOrNull() ?: 0.0
         mainCurrencyChangedSubject.onNext(Any())
     }
 
@@ -66,7 +61,24 @@ class CurrenciesPresenter @Inject constructor(
         disposableContainer.clear()
     }
 
-    fun showData(
+    private fun subscribeForCurrencyRateUpdate() {
+        Observable.merge(
+            Observable.interval(REFRESH_INTERVAL_SEC, TimeUnit.SECONDS).startWithItem(0),
+            mainCurrencyChangedSubject.hide()
+        )
+            .switchMapSingle {
+                val requestedRevision = revision.get()
+                getCurrenciesUseCase.execute(mainCurrencyCode)
+                    .map {
+                        requestedRevision to it
+                    }
+            }
+            .retry(1) //todo or move to repo
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(CurrenciesObserver())
+    }
+
+    private fun showData(
         mainCurrencyCode: CurrencyCode,
         mainCurrencyAmount: Double,
         rates: List<CurrencyRate>
@@ -103,6 +115,6 @@ class CurrenciesPresenter @Inject constructor(
     }
 
     companion object {
-        private const val REFRESH_INTERVAL_SEC = 1L //todo 1
+        private const val REFRESH_INTERVAL_SEC = 1L
     }
 }
