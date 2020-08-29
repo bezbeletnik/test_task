@@ -24,7 +24,21 @@ class MainCurrencyItem(
     override fun getViewHolder(v: View) =
         ViewHolder(v)
 
-    override var identifier: Long = vo.hashCode().toLong()
+    override var identifier: Long = vo.toIdentifierSignificantFields().hashCode().toLong()
+
+    private fun MainCurrencyVo.toIdentifierSignificantFields(): IdentifierSignificantFields {
+        return IdentifierSignificantFields(
+            image = image,
+            currencyShortName = currencyShortName,
+            currencyFullName = currencyFullName
+        )
+    }
+
+    private data class IdentifierSignificantFields(
+        val image: Int,
+        val currencyShortName: String,
+        val currencyFullName: String
+    )
 
     inner class ViewHolder(view: View) : FastAdapter.ViewHolder<MainCurrencyItem>(view) {
 
