@@ -48,18 +48,11 @@ class MainCurrencyItem(
                 imeOptions = EditorInfo.IME_ACTION_DONE
                 setText(item.vo.amount)
                 doOnTextChanged { text, _, _, _ -> onAmountChanged(text) }
-                setOnFocusChangeListener { view, b ->
-                    if (b) {
-                        currencyRate.setSelection(currencyRate.text.length)
+                setOnFocusChangeListener { _, isInFocus ->
+                    if (isInFocus) {
+                        post { currencyRate.setSelection(currencyRate.text.length) }
                     }
                 }
-//                setOnClickListener {
-//                    post(object :Runnable {
-//                        override fun run() {
-//                            currencyRate.setSelection(currencyRate.text.length)
-//                        }
-//                    })
-//                }
             }
         }
 
