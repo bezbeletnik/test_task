@@ -1,6 +1,5 @@
 package com.test.revolut.ui.formatter
 
-import android.util.Log
 import com.test.revolut.data.mapper.CurrencyCodeMapper
 import com.test.revolut.domain.model.CurrencyRate
 import com.test.revolut.domain.usecase.GetCurrencyNameUseCase
@@ -14,14 +13,20 @@ class CurrencyRateFormatter @Inject constructor(
     private val getCurrencyNameUseCase: GetCurrencyNameUseCase
 ) {
 
-    fun format(currencyRates: List<CurrencyRate>): List<CurrencyRateVo> {
+    fun format(
+        currencyRates: List<CurrencyRate>,
+        mainCurrencyAmount: Double
+    ): List<CurrencyRateVo> {
         return currencyRates.map {
-            val isoCode = codeMapper.mapToIsoCode(it.currency)
+            val isoCode = codeMapper.mapToIsoCode(it.rateCurrencyCode)
             CurrencyRateVo(
-                image = iconFormatter.getImage(it.currency),
+                image = iconFormatter.getImage(it.rateCurrencyCode),
                 currencyShortName = isoCode,
-                currencyFullName = getCurrencyNameUseCase.execute(isoCode) ?: handleUnkownName(isoCode),
-                rate = it.rate.toString()
+                currencyFullName = getCurrencyNameUseCase.execute(isoCode) ?: handleUnkownName(
+                    isoCode
+                ),
+                rate = String.format("%.2f", it.rate * mainCurrencyAmount),
+                currencyCode = it.rateCurrencyCode
             )
         }
     }

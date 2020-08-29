@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.test.revolut.R
 import com.test.revolut.ui.item.CurrencyRateItem
 import com.test.revolut.ui.item.MainCurrencyItem
@@ -30,13 +31,13 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
 
     private val presenter by moxyPresenter { presenterProvider.get() }
 
-    private val ratesAdapter = ItemAdapter<CurrencyRateItem>()
     private val mainItemAdapter = ItemAdapter<MainCurrencyItem>()
-
+    private val ratesAdapter = ItemAdapter<CurrencyRateItem>()
     private val fastAdapter = FastAdapter<GenericItem>()
 
     init {
         fastAdapter.addAdapters(listOf(mainItemAdapter.downcast(), ratesAdapter.downcast()))
+        fastAdapter.setHasStableIds(true)
     }
 
     override fun onCreateView(
@@ -51,6 +52,14 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
         super.onViewCreated(view, savedInstanceState)
         currenciesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         currenciesRecyclerView.adapter = fastAdapter
+        currenciesRecyclerView.itemAnimator = null
+
+        fastAdapter.onClickListener = { _, _, item, _ ->
+            if (item is CurrencyRateItem) {
+                presenter.onMainCurrencyChanged(item.vo.currencyCode)
+            }
+            true
+        }
     }
 
     override fun showResult(mainCurrencyVo: MainCurrencyVo, rateVos: List<CurrencyRateVo>) {
@@ -64,9 +73,10 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
                     it
                 )
             }
-            ratesAdapter.set(items)
+            FastAdapterDiffUtil.set(ratesAdapter, items)
         }
-        mainItemAdapter.set(listOf(MainCurrencyItem(mainCurrencyVo)))
+        val mainCurrencyItem = MainCurrencyItem(mainCurrencyVo) { presenter.onAmountChanged(it) }
+        FastAdapterDiffUtil.set(mainItemAdapter, listOf(mainCurrencyItem))
     }
 
     override fun showError(message: String) {

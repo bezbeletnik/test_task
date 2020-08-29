@@ -26,10 +26,11 @@ class CurrenciesPresenter @Inject constructor(
     private val disposableContainer = CompositeDisposable()
 
     private val mainCurrencyChangedSubject = PublishSubject.create<Any>().toSerialized()
-
     private var mainCurrencyCode = CurrencyCode.EUR
-    private var mainCurrencyAmount = 10
+    private var mainCurrencyAmount = 10.0
     private val revision = AtomicInteger()
+
+    private var lastRates: List<CurrencyRate> = emptyList()
 
     override fun onFirstViewAttach() {
         Observable.merge(
@@ -41,31 +42,46 @@ class CurrenciesPresenter @Inject constructor(
                 getCurrenciesUseCase.execute(mainCurrencyCode)
                     .map { requestedRevision to it }
             }
-            .retry(1) //todo
+            .retry(1) //todo or move to repo
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(CurrenciesObserver())
     }
 
-    fun onChangeMainCurrency(currencyCode: CurrencyCode) {
+    fun onMainCurrencyChanged(currencyCode: CurrencyCode) {
         revision.incrementAndGet()
         mainCurrencyCode = currencyCode
+        mainCurrencyChangedSubject.onNext(Any())
     }
 
-    fun onChangeAmount(amount: Int) {
-        mainCurrencyAmount = amount
+    fun onAmountChanged(amount: CharSequence?) {
+        amount?.toString()?.toDoubleOrNull()?.also {
+            if (it != mainCurrencyAmount) {
+                mainCurrencyAmount = it
+                showData(mainCurrencyCode, mainCurrencyAmount, lastRates)
+            }
+        }
     }
 
     override fun onDestroy() {
         disposableContainer.clear()
     }
 
-    private inner class CurrenciesObserver : Observer<Pair<Int,List<CurrencyRate>>> {
+    fun showData(
+        mainCurrencyCode: CurrencyCode,
+        mainCurrencyAmount: Double,
+        rates: List<CurrencyRate>
+    ) {
+        val mainCurrencyVo = mainCurrencyFormatter.format(mainCurrencyCode, mainCurrencyAmount)
+        val rateVos = currencyRateFormatter.format(rates, mainCurrencyAmount)
+        viewState.showResult(mainCurrencyVo, rateVos)
+    }
+
+    private inner class CurrenciesObserver : Observer<Pair<Int, List<CurrencyRate>>> {
         override fun onNext(pair: Pair<Int, List<CurrencyRate>>) {
             val (requestedRevision, rates) = pair
             if (requestedRevision == revision.get()) {
-                val mainCurrencyVo = mainCurrencyFormatter.format(mainCurrencyCode, mainCurrencyAmount)
-                val rateVos = currencyRateFormatter.format(rates)
-                viewState.showResult(mainCurrencyVo, rateVos)
+                lastRates = rates
+                showData(mainCurrencyCode, mainCurrencyAmount, rates)
             }
         }
 
@@ -87,6 +103,6 @@ class CurrenciesPresenter @Inject constructor(
     }
 
     companion object {
-        private const val REFRESH_INTERVAL_SEC = 30L //todo 1
+        private const val REFRESH_INTERVAL_SEC = 1L //todo 1
     }
 }

@@ -1,7 +1,7 @@
 package com.test.revolut.ui.vo
 
 import androidx.annotation.DrawableRes
-import androidx.annotation.RawRes
+import com.test.revolut.data.mapper.CurrencyCode
 
 
 data class CurrencyRateVo(
@@ -9,5 +9,6 @@ data class CurrencyRateVo(
     val image: Int,
     val currencyShortName: String,
     val currencyFullName: String,
-    val rate: String
+    val rate: String,
+    val currencyCode: CurrencyCode
 )

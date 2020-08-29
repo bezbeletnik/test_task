@@ -11,7 +11,7 @@ import com.test.revolut.R
 import com.test.revolut.ui.vo.CurrencyRateVo
 
 class CurrencyRateItem(
-    private val vo: CurrencyRateVo
+    val vo: CurrencyRateVo
 ) : AbstractItem<CurrencyRateItem.ViewHolder>() {
 
     override val type = R.id.currency_rate_item_id

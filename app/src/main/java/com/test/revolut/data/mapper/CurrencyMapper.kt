@@ -22,8 +22,9 @@ class CurrencyMapper @Inject constructor(
         val baseCurrency = currencyCodeMapper.mapCurrencyCode(dto.baseCurrency) ?: return emptyList()
         return dto.rates.mapNotNull {
             CurrencyRate(
-                baseCurrency = baseCurrency,
-                currency = currencyCodeMapper.mapCurrencyCode(it.key) ?: return@mapNotNull null,
+                baseCurrencyCode = baseCurrency,
+                rateCurrencyCode = currencyCodeMapper.mapCurrencyCode(it.key)
+                    ?: return@mapNotNull null,
                 rate = it.value
             )
         }
