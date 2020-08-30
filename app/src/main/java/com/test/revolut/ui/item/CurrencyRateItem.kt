@@ -1,6 +1,5 @@
 package com.test.revolut.ui.item
 
-import android.graphics.Paint
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
@@ -42,8 +41,7 @@ class CurrencyRateItem(
 
             currencyShortName.text = item.vo.currencyShortName
             currencyFullName.text = item.vo.currencyFullName
-            currencyRate.setText(item.vo.rate)
-            currencyRate.setPaintFlags(currencyRate.getPaintFlags() or Paint.UNDERLINE_TEXT_FLAG)
+            currencyRate.text = item.vo.rate
         }
 
         override fun unbindView(item: CurrencyRateItem) {

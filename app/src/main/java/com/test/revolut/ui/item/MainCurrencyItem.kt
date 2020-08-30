@@ -80,7 +80,6 @@ class MainCurrencyItem(
                 isFocusableInTouchMode = true
                 isFocusable = true
                 imeOptions = EditorInfo.IME_ACTION_DONE
-//                setText(item.vo.amount)
                 setOnFocusChangeListener { _, isInFocus ->
                     if (isInFocus) {
                         post { currencyAmount.setSelection(currencyAmount.text.length) }
@@ -93,6 +92,7 @@ class MainCurrencyItem(
                     }
                     false
                 }
+//                post { setText(item.vo.amount) }
             }
         }
 
