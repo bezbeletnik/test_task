@@ -51,9 +51,9 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         currenciesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        currenciesRecyclerView.adapter = fastAdapter
         currenciesRecyclerView.itemAnimator = null
 
+        currenciesRecyclerView.adapter = fastAdapter
         fastAdapter.onClickListener = { _, _, item, _ ->
             if (item is CurrencyRateItem) {
                 presenter.onMainCurrencyChanged(item.vo.currencyCode, item.vo.rate)
@@ -72,13 +72,9 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
             showState(State.EMPTY_RESULT)
         } else {
             showState(State.CONTENT_SHOWN)
-            emptyResultTextView.visibility = View.GONE
-            val items = rateVos.map {
-                CurrencyRateItem(
-                    it
-                )
-            }
-            FastAdapterDiffUtil.set(ratesAdapter, items)
+
+            val items = rateVos.map { CurrencyRateItem(it) }
+            FastAdapterDiffUtil[ratesAdapter] = items
 
             val mainCurrencyItem = MainCurrencyItem(mainCurrencyVo) {
                 presenter.onAmountChanged(it)

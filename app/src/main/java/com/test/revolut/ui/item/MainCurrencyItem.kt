@@ -81,9 +81,14 @@ class MainCurrencyItem(
                         post { currencyRate.setSelection(currencyRate.text.length) }
                     }
                 }
+                addTextChangedListener(textWatcher)
+                setOnEditorActionListener { v, actionId, event ->
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        currencyRate.clearFocus()
+                    }
+                    false
+                }
             }
-//            currencyRate.doOnTextChanged { text, _, _, _ -> onAmountChanged(text) }
-            currencyRate.addTextChangedListener(textWatcher)
         }
 
         override fun unbindView(item: MainCurrencyItem) {

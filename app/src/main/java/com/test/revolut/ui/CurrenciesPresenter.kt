@@ -27,7 +27,7 @@ class CurrenciesPresenter @Inject constructor(
 
     private val mainCurrencyChangedSubject = PublishSubject.create<Any>().toSerialized()
     private var mainCurrencyCode = CurrencyCode.EUR
-    private var mainCurrencyAmount = 100.0
+    private var mainCurrencyAmount = 1.0
     private val revision = AtomicInteger()
 
     private var lastRates: List<CurrencyRate> = emptyList()

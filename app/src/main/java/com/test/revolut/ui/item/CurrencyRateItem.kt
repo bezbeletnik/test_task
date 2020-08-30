@@ -18,10 +18,9 @@ class CurrencyRateItem(
 
     override val layoutRes = R.layout.currency_rate_item
 
-    override fun getViewHolder(v: View) =
-        ViewHolder(v)
-
     override var identifier: Long = vo.hashCode().toLong()
+
+    override fun getViewHolder(v: View) = ViewHolder(v)
 
     class ViewHolder(view: View) : FastAdapter.ViewHolder<CurrencyRateItem>(view) {
 
