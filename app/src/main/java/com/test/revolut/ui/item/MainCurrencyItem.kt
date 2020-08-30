@@ -1,11 +1,12 @@
 package com.test.revolut.ui.item
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.widget.doOnTextChanged
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -47,6 +48,20 @@ class MainCurrencyItem(
         private val currencyFullName: TextView = view.findViewById(R.id.currencyFullName)
         private val currencyRate: EditText = view.findViewById(R.id.currencyRate)
 
+        private val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(text: Editable?) {
+                onAmountChanged(text)
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //nop
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                //nop
+            }
+        }
+
         override fun bindView(item: MainCurrencyItem, payloads: List<Any>) {
             Glide.with(currencyImageView)
                 .load(item.vo.image)
@@ -61,17 +76,19 @@ class MainCurrencyItem(
                 isFocusable = true
                 imeOptions = EditorInfo.IME_ACTION_DONE
                 setText(item.vo.amount)
-                doOnTextChanged { text, _, _, _ -> onAmountChanged(text) }
                 setOnFocusChangeListener { _, isInFocus ->
                     if (isInFocus) {
                         post { currencyRate.setSelection(currencyRate.text.length) }
                     }
                 }
             }
+//            currencyRate.doOnTextChanged { text, _, _, _ -> onAmountChanged(text) }
+            currencyRate.addTextChangedListener(textWatcher)
         }
 
         override fun unbindView(item: MainCurrencyItem) {
             Glide.with(currencyImageView).clear(currencyImageView)
+            currencyRate.removeTextChangedListener(textWatcher)
         }
     }
 }
