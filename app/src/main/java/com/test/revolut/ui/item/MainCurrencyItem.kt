@@ -85,14 +85,19 @@ class MainCurrencyItem(
                         post { currencyAmount.setSelection(currencyAmount.text.length) }
                     }
                 }
-                addTextChangedListener(textWatcher)
+
                 setOnEditorActionListener { v, actionId, event ->
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
                         currencyAmount.clearFocus()
                     }
                     false
                 }
-//                post { setText(item.vo.amount) }
+
+                if (!isFocused) {
+                    setText(item.vo.amount)
+                } else {
+                    addTextChangedListener(textWatcher)
+                }
             }
         }
 

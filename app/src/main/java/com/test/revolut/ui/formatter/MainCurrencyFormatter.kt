@@ -23,7 +23,7 @@ class MainCurrencyFormatter @Inject constructor(
             image = iconFormatter.getImage(mainCurrencyCode),
             currencyShortName = isoCode,
             currencyFullName = getCurrencyNameUseCase.execute(isoCode) ?: handleUnkownName(isoCode),
-            amount = DecimalFormat("0.#").format(mainCurrencyAmount)
+            amount = DecimalFormat("0.##").format(mainCurrencyAmount)
         )
 
     }
