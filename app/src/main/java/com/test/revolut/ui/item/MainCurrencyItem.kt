@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -46,7 +47,8 @@ class MainCurrencyItem(
         private val currencyImageView: ImageView = view.findViewById(R.id.currencyImageView)
         private val currencyShortName: TextView = view.findViewById(R.id.currencyShortName)
         private val currencyFullName: TextView = view.findViewById(R.id.currencyFullName)
-        private val currencyRate: EditText = view.findViewById(R.id.currencyRate)
+        private val currencyRate: TextView = view.findViewById(R.id.currencyRate)
+        private val currencyAmount: EditText = view.findViewById(R.id.currencyAmount)
 
         private val textWatcher = object : TextWatcher {
             override fun afterTextChanged(text: Editable?) {
@@ -63,6 +65,9 @@ class MainCurrencyItem(
         }
 
         override fun bindView(item: MainCurrencyItem, payloads: List<Any>) {
+            currencyAmount.isVisible = true
+            currencyRate.isVisible = false
+
             Glide.with(currencyImageView)
                 .load(item.vo.image)
                 .circleCrop()
@@ -70,21 +75,21 @@ class MainCurrencyItem(
 
             currencyShortName.text = item.vo.currencyShortName
             currencyFullName.text = item.vo.currencyFullName
-            currencyRate.apply {
+            currencyAmount.apply {
                 isEnabled = true
                 isFocusableInTouchMode = true
                 isFocusable = true
                 imeOptions = EditorInfo.IME_ACTION_DONE
-                setText(item.vo.amount)
+//                setText(item.vo.amount)
                 setOnFocusChangeListener { _, isInFocus ->
                     if (isInFocus) {
-                        post { currencyRate.setSelection(currencyRate.text.length) }
+                        post { currencyAmount.setSelection(currencyAmount.text.length) }
                     }
                 }
                 addTextChangedListener(textWatcher)
                 setOnEditorActionListener { v, actionId, event ->
                     if (actionId == EditorInfo.IME_ACTION_DONE) {
-                        currencyRate.clearFocus()
+                        currencyAmount.clearFocus()
                     }
                     false
                 }
@@ -93,7 +98,7 @@ class MainCurrencyItem(
 
         override fun unbindView(item: MainCurrencyItem) {
             Glide.with(currencyImageView).clear(currencyImageView)
-            currencyRate.removeTextChangedListener(textWatcher)
+            currencyAmount.removeTextChangedListener(textWatcher)
         }
     }
 }

@@ -37,7 +37,6 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
 
     init {
         fastAdapter.addAdapters(listOf(mainItemAdapter.downcast(), ratesAdapter.downcast()))
-        fastAdapter.setHasStableIds(true)
     }
 
     override fun onCreateView(
@@ -73,13 +72,14 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
         } else {
             showState(State.CONTENT_SHOWN)
 
-            val items = rateVos.map { CurrencyRateItem(it) }
-            FastAdapterDiffUtil[ratesAdapter] = items
-
             val mainCurrencyItem = MainCurrencyItem(mainCurrencyVo) {
                 presenter.onAmountChanged(it)
             }
             FastAdapterDiffUtil[mainItemAdapter] = listOf(mainCurrencyItem)
+
+            val items = rateVos.map { CurrencyRateItem(it) }
+            FastAdapterDiffUtil[ratesAdapter] = items
+            ratesAdapter.setNewList(items)
         }
     }
 

@@ -25,9 +25,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="@string/connection_error"
-        android:textColor="#191C1F"
-        android:textSize="16sp"
+        android:textAppearance="@style/title"
+        android:lineSpacingExtra="5sp"
         app:layout_constraintStart_toEndOf="@id/currencyImageView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="USD" />
@@ -36,29 +35,41 @@
         android:id="@+id/currencyFullName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/connection_error"
-        android:textColor="#8B959E"
-        android:textSize="16sp"
+        android:textAppearance="@style/description"
         app:layout_constraintStart_toStartOf="@id/currencyShortName"
         app:layout_constraintTop_toBottomOf="@id/currencyShortName"
         tools:text="US Dollar" />
 
-    <androidx.appcompat.widget.AppCompatEditText
+    <TextView
         android:id="@+id/currencyRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:enabled="false"
         android:focusable="false"
-        android:inputType="numberDecimal"
-        android:textColor="#191C1F"
-        android:textStyle="bold"
+        android:textAppearance="@style/amount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@id/currencyFullName"
         app:layout_constraintTop_toBottomOf="@id/currencyFullName"
         app:layout_constraintTop_toTopOf="@id/currencyShortName"
-        app:layout_constraintVertical_bias="0.5"
+        tools:text="66.6" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/currencyAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:enabled="false"
+        android:focusable="false"
+        android:inputType="numberDecimal"
+        android:textAppearance="@style/amount"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@id/currencyFullName"
+        app:layout_constraintTop_toBottomOf="@id/currencyFullName"
+        app:layout_constraintTop_toTopOf="@id/currencyShortName"
         tools:text="66.6" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

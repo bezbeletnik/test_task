@@ -1,9 +1,11 @@
 package com.test.revolut.ui.item
 
+import android.graphics.Paint
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -27,9 +29,12 @@ class CurrencyRateItem(
         private val currencyImageView: ImageView = view.findViewById(R.id.currencyImageView)
         private val currencyShortName: TextView = view.findViewById(R.id.currencyShortName)
         private val currencyFullName: TextView = view.findViewById(R.id.currencyFullName)
-        private val currencyRate: EditText = view.findViewById(R.id.currencyRate)
+        private val currencyRate: TextView = view.findViewById(R.id.currencyRate)
+        private val currencyAmount: EditText = view.findViewById(R.id.currencyAmount)
 
         override fun bindView(item: CurrencyRateItem, payloads: List<Any>) {
+            currencyAmount.isVisible = false
+            currencyRate.isVisible = true
             Glide.with(currencyImageView)
                 .load(item.vo.image)
                 .circleCrop()
@@ -38,6 +43,7 @@ class CurrencyRateItem(
             currencyShortName.text = item.vo.currencyShortName
             currencyFullName.text = item.vo.currencyFullName
             currencyRate.setText(item.vo.rate)
+            currencyRate.setPaintFlags(currencyRate.getPaintFlags() or Paint.UNDERLINE_TEXT_FLAG)
         }
 
         override fun unbindView(item: CurrencyRateItem) {
