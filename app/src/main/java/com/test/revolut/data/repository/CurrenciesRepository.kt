@@ -1,10 +1,10 @@
 package com.test.revolut.data.repository
 
 import androidx.annotation.CheckResult
-import com.test.revolut.data.store.CurrenciesApiService
 import com.test.revolut.data.mapper.CurrencyCode
 import com.test.revolut.data.mapper.CurrencyCodeMapper
 import com.test.revolut.data.mapper.CurrencyMapper
+import com.test.revolut.data.store.CurrenciesApiService
 import com.test.revolut.data.store.CurrencyNameDataStore
 import com.test.revolut.domain.model.CurrencyRate
 import io.reactivex.rxjava3.core.Single
@@ -19,8 +19,8 @@ class CurrenciesRepository @Inject constructor(
 ) {
 
     @CheckResult
-    fun getCurrencies(base: CurrencyCode): Single<List<CurrencyRate>> {
-        return Single.fromCallable{ currencyCodeMapper.mapToIsoCode(base) }
+    fun getCurrenciesRates(base: CurrencyCode): Single<List<CurrencyRate>> {
+        return Single.fromCallable { currencyCodeMapper.mapToIsoCode(base) }
             .flatMap { currenciesApiService.getLatestCurrenciesAsync(it) }
             .map { currencyMapper.map(it) }
             .subscribeOn(Schedulers.io())

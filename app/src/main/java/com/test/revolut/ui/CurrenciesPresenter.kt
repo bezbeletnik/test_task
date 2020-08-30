@@ -2,7 +2,7 @@ package com.test.revolut.ui
 
 import com.test.revolut.data.mapper.CurrencyCode
 import com.test.revolut.domain.model.CurrencyRate
-import com.test.revolut.domain.usecase.GetCurrenciesUseCase
+import com.test.revolut.domain.usecase.GetCurrenciesRatesUseCase
 import com.test.revolut.ui.formatter.CurrencyRateFormatter
 import com.test.revolut.ui.formatter.MainCurrencyFormatter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 class CurrenciesPresenter @Inject constructor(
-    private val getCurrenciesUseCase: GetCurrenciesUseCase,
+    private val getCurrenciesRatesUseCase: GetCurrenciesRatesUseCase,
     private val currencyRateFormatter: CurrencyRateFormatter,
     private val mainCurrencyFormatter: MainCurrencyFormatter
 ) : MvpPresenter<CurrenciesView>() {
@@ -68,12 +68,12 @@ class CurrenciesPresenter @Inject constructor(
         )
             .switchMapSingle {
                 val requestedRevision = revision.get()
-                getCurrenciesUseCase.execute(mainCurrencyCode)
+                getCurrenciesRatesUseCase.execute(mainCurrencyCode)
                     .map {
                         requestedRevision to it
                     }
             }
-            .retry(1) //todo or move to repo
+            .retry(1)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(CurrenciesObserver())
     }

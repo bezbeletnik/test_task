@@ -1,16 +1,13 @@
 package com.test.revolut.di
 
-import android.content.Context
-import android.content.res.Resources
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.test.revolut.data.store.CurrenciesApiService
 import com.test.revolut.data.Urls.BASE_URL
+import com.test.revolut.data.store.CurrenciesApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
-import dagger.hilt.android.qualifiers.ApplicationContext
 import hu.akarnokd.rxjava3.retrofit.RxJava3CallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -40,14 +37,10 @@ class AppModule {
     @Provides
     fun provideGson(): Gson = GsonBuilder().create()
 
-    @Provides
     @Singleton
-    fun provideCurrenciesApiService (retrofit: Retrofit): CurrenciesApiService {
+    @Provides
+    fun provideCurrenciesApiService(retrofit: Retrofit): CurrenciesApiService {
         return retrofit.create(CurrenciesApiService::class.java)
     }
-
-//    @Singleton
-//    @Provides
-//    fun provideResources(@ApplicationContext appContext: Context): Resources = appContext.resources
 
 }

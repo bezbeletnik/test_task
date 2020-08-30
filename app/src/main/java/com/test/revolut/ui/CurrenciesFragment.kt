@@ -75,13 +75,6 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
             val mainCurrencyItem = MainCurrencyItem(mainCurrencyVo) {
                 presenter.onAmountChanged(it)
             }
-
-            val adapterItem = mainItemAdapter.adapterItems.firstOrNull()
-            if (adapterItem != mainCurrencyItem) {
-                val diff =
-                    FastAdapterDiffUtil.calculateDiff(mainItemAdapter, listOf(mainCurrencyItem))
-                println()
-            }
             FastAdapterDiffUtil[mainItemAdapter] = listOf(mainCurrencyItem)
 
             val items = rateVos.map { CurrencyRateItem(it) }
