@@ -2,4 +2,5 @@
 <resources>
     <item name="currency_rate_item_id" type="id" />
     <item name="main_currency_item_id" type="id" />
+    <item name="title_item_id" type="id" />
 </resources>

@@ -13,6 +13,7 @@ import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
 import com.test.revolut.R
 import com.test.revolut.ui.item.CurrencyRateItem
 import com.test.revolut.ui.item.MainCurrencyItem
+import com.test.revolut.ui.item.TitleItem
 import com.test.revolut.ui.vo.CurrencyRateVo
 import com.test.revolut.ui.vo.MainCurrencyVo
 import com.test.revolut.utils.downcast
@@ -31,12 +32,19 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
 
     private val presenter by moxyPresenter { presenterProvider.get() }
 
+    private val titleItemAdapter = ItemAdapter<TitleItem>()
     private val mainItemAdapter = ItemAdapter<MainCurrencyItem>()
     private val ratesAdapter = ItemAdapter<CurrencyRateItem>()
     private val fastAdapter = FastAdapter<GenericItem>()
 
     init {
-        fastAdapter.addAdapters(listOf(mainItemAdapter.downcast(), ratesAdapter.downcast()))
+        fastAdapter.addAdapters(
+            listOf(
+                titleItemAdapter.downcast(),
+                mainItemAdapter.downcast(),
+                ratesAdapter.downcast()
+            )
+        )
     }
 
     override fun onCreateView(
@@ -62,7 +70,7 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
         reloadButton.setOnClickListener {
             presenter.onReloadClicked()
         }
-
+        titleItemAdapter.set(listOf(TitleItem()))
         showState(State.LOADING)
     }
 

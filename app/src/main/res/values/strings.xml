@@ -4,4 +4,5 @@
     <string name="empty_result">No data. Please, try again</string>
     <string name="try_again">Refresh</string>
     <string name="currency_img">Currency image</string>
+    <string name="title">Rates</string>
 </resources>

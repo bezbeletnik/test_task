@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:textAppearance="@style/title"
-        android:lineSpacingExtra="5sp"
         app:layout_constraintStart_toEndOf="@id/currencyImageView"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="USD" />
