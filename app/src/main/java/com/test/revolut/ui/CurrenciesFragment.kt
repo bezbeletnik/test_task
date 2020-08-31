@@ -104,6 +104,10 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
         showState(State.ERROR, getString(R.string.connection_error))
     }
 
+    override fun scrollToTop() {
+        currenciesRecyclerView.smoothScrollToPosition(0)
+    }
+
     companion object {
         fun newInstance() = CurrenciesFragment()
     }

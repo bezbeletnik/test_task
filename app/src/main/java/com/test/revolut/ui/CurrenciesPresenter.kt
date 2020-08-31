@@ -46,6 +46,7 @@ class CurrenciesPresenter @Inject constructor(
         mainCurrencyCode = currencyCode
         mainCurrencyAmount = rate.toDoubleOrNull() ?: 0.0
         mainCurrencyChangedSubject.onNext(Any())
+        viewState.scrollToTop()
     }
 
     fun onAmountChanged(amount: CharSequence?) {
