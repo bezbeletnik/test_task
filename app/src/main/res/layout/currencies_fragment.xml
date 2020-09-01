@@ -25,6 +25,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
+    <ProgressBar
+        android:id="@+id/updateProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminateOnly="true"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/currenciesRecyclerView"
         android:layout_width="match_parent"

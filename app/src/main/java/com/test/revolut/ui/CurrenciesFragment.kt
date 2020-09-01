@@ -68,6 +68,7 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
             true
         }
         reloadButton.setOnClickListener {
+            showState(State.LOADING)
             presenter.onReloadClicked()
         }
         titleItemAdapter.set(listOf(TitleItem()))
@@ -98,6 +99,7 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
         emptyResultTextView.text = errorText
 
         currenciesRecyclerView.isVisible = state == State.CONTENT_SHOWN
+        updateProgressBar.visibility = View.INVISIBLE
     }
 
     private enum class State {
@@ -114,6 +116,14 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
 
     override fun scrollToTop() {
         currenciesRecyclerView.smoothScrollToPosition(0)
+    }
+
+    override fun showLoading() {
+        updateProgressBar.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        updateProgressBar.visibility = View.INVISIBLE
     }
 
     companion object {

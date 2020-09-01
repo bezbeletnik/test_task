@@ -47,6 +47,7 @@ class CurrenciesPresenter @Inject constructor(
         mainCurrencyAmount = rateValue
         mainCurrencyChangedSubject.onNext(Any())
         viewState.scrollToTop()
+        viewState.showLoading()
     }
 
     fun onAmountChanged(amount: CharSequence?) {
@@ -87,6 +88,7 @@ class CurrenciesPresenter @Inject constructor(
         val mainCurrencyVo = mainCurrencyFormatter.format(mainCurrencyCode, mainCurrencyAmount)
         val rateVos = currencyRateFormatter.format(rates, mainCurrencyAmount)
         viewState.showResult(mainCurrencyVo, rateVos)
+        viewState.hideLoading()
     }
 
     private inner class CurrenciesObserver : Observer<Pair<Int, List<CurrencyRate>>> {
