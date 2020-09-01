@@ -63,7 +63,7 @@ class CurrenciesFragment : MvpAppCompatFragment(), CurrenciesView {
         currenciesRecyclerView.adapter = fastAdapter
         fastAdapter.onClickListener = { _, _, item, _ ->
             if (item is CurrencyRateItem) {
-                presenter.onMainCurrencyChanged(item.vo.currencyCode, item.vo.rate)
+                presenter.onMainCurrencyChanged(item.vo.currencyCode, item.vo.rateValue)
             }
             true
         }

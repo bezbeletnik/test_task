@@ -19,13 +19,15 @@ class CurrencyRateFormatter @Inject constructor(
     ): List<CurrencyRateVo> {
         return currencyRates.map {
             val isoCode = codeMapper.mapToIsoCode(it.rateCurrencyCode)
+            val rateValue = it.rate * mainCurrencyAmount
             CurrencyRateVo(
                 image = iconFormatter.getImage(it.rateCurrencyCode),
                 currencyShortName = isoCode,
                 currencyFullName = getCurrencyNameUseCase.execute(isoCode) ?: handleUnkownName(
                     isoCode
                 ),
-                rate = String.format("%.2f", it.rate * mainCurrencyAmount),
+                rate = String.format("%.2f", rateValue),
+                rateValue = rateValue,
                 currencyCode = it.rateCurrencyCode
             )
         }

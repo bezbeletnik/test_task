@@ -10,5 +10,6 @@ data class CurrencyRateVo(
     val currencyShortName: String,
     val currencyFullName: String,
     val rate: String,
+    val rateValue: Double,
     val currencyCode: CurrencyCode
 )

@@ -13,6 +13,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import moxy.MvpPresenter
 import java.net.ConnectException
+import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -41,18 +42,19 @@ class CurrenciesPresenter @Inject constructor(
         subscribeForCurrencyRateUpdate()
     }
 
-    fun onMainCurrencyChanged(currencyCode: CurrencyCode, rate: String) {
+    fun onMainCurrencyChanged(currencyCode: CurrencyCode, rateValue: Double) {
         revision.incrementAndGet()
         mainCurrencyCode = currencyCode
-        mainCurrencyAmount = rate.toDoubleOrNull() ?: 0.0
+        mainCurrencyAmount = rateValue
         mainCurrencyChangedSubject.onNext(Any())
         viewState.scrollToTop()
     }
 
     fun onAmountChanged(amount: CharSequence?) {
-        amount?.toString()?.toDoubleOrNull()?.also {
-            if (it != mainCurrencyAmount) {
-                mainCurrencyAmount = it
+        amount?.toString()?.let {
+            val newAmount = DecimalFormat.getInstance().parse(it)?.toDouble()
+            if (newAmount != null && newAmount != mainCurrencyAmount) {
+                mainCurrencyAmount = newAmount
                 showData(mainCurrencyCode, mainCurrencyAmount, lastRates)
             }
         }
@@ -116,6 +118,6 @@ class CurrenciesPresenter @Inject constructor(
     }
 
     companion object {
-        private const val REFRESH_INTERVAL_SEC = 1L
+        private const val REFRESH_INTERVAL_SEC = 20L
     }
 }

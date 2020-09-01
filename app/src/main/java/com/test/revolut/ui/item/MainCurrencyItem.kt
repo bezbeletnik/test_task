@@ -92,12 +92,12 @@ class MainCurrencyItem(
                     }
                     false
                 }
-
                 if (!isFocused) {
-                    setText(item.vo.amount)
-                } else {
-                    addTextChangedListener(textWatcher)
+                    post {
+                        setText(item.vo.amount)
+                    }
                 }
+                addTextChangedListener(textWatcher)
             }
         }
 
