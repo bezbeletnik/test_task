@@ -13,7 +13,6 @@ import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import moxy.MvpPresenter
 import java.net.ConnectException
-import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -51,10 +50,9 @@ class CurrenciesPresenter @Inject constructor(
     }
 
     fun onAmountChanged(amount: CharSequence?) {
-        amount?.toString()?.let {
-            val newAmount = DecimalFormat.getInstance().parse(it)?.toDouble()
-            if (newAmount != null && newAmount != mainCurrencyAmount) {
-                mainCurrencyAmount = newAmount
+        amount?.toString()?.toDoubleOrNull()?.also {
+            if (it != mainCurrencyAmount) {
+                mainCurrencyAmount = it
                 showData(mainCurrencyCode, mainCurrencyAmount, lastRates)
             }
         }
