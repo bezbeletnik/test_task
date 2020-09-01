@@ -83,6 +83,9 @@ class MainCurrencyItem(
                 setOnFocusChangeListener { _, isInFocus ->
                     if (isInFocus) {
                         post { currencyAmount.setSelection(currencyAmount.text.length) }
+                        addTextChangedListener(textWatcher)
+                    } else {
+                        currencyAmount.removeTextChangedListener(textWatcher)
                     }
                 }
 
@@ -92,12 +95,10 @@ class MainCurrencyItem(
                     }
                     false
                 }
+
                 if (!isFocused) {
-                    post {
-                        setText(item.vo.amount)
-                    }
+                    post { setText(item.vo.amount) }
                 }
-                addTextChangedListener(textWatcher)
             }
         }
 

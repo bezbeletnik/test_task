@@ -28,7 +28,7 @@ class CurrenciesPresenter @Inject constructor(
     private val mainCurrencyChangedSubject = PublishSubject.create<Any>().toSerialized()
     private var mainCurrencyCode = CurrencyCode.EUR
     private var mainCurrencyAmount = 1.0
-    private val revision = AtomicInteger()
+    private val currencyChangedRevision = AtomicInteger()
 
     private var lastRates: List<CurrencyRate> = emptyList()
 
@@ -42,7 +42,7 @@ class CurrenciesPresenter @Inject constructor(
     }
 
     fun onMainCurrencyChanged(currencyCode: CurrencyCode, rateValue: Double) {
-        revision.incrementAndGet()
+        currencyChangedRevision.incrementAndGet()
         mainCurrencyCode = currencyCode
         mainCurrencyAmount = rateValue
         mainCurrencyChangedSubject.onNext(Any())
@@ -69,11 +69,9 @@ class CurrenciesPresenter @Inject constructor(
             mainCurrencyChangedSubject.hide()
         )
             .switchMapSingle {
-                val requestedRevision = revision.get()
+                val requestedRevision = currencyChangedRevision.get()
                 getCurrenciesRatesUseCase.execute(mainCurrencyCode)
-                    .map {
-                        requestedRevision to it
-                    }
+                    .map { requestedRevision to it }
             }
             .retry(1)
             .observeOn(AndroidSchedulers.mainThread())
@@ -94,7 +92,7 @@ class CurrenciesPresenter @Inject constructor(
     private inner class CurrenciesObserver : Observer<Pair<Int, List<CurrencyRate>>> {
         override fun onNext(pair: Pair<Int, List<CurrencyRate>>) {
             val (requestedRevision, rates) = pair
-            if (requestedRevision == revision.get()) {
+            if (requestedRevision == currencyChangedRevision.get()) {
                 lastRates = rates
                 showData(mainCurrencyCode, mainCurrencyAmount, rates)
             }
@@ -118,6 +116,6 @@ class CurrenciesPresenter @Inject constructor(
     }
 
     companion object {
-        private const val REFRESH_INTERVAL_SEC = 20L
+        private const val REFRESH_INTERVAL_SEC = 1L
     }
 }
